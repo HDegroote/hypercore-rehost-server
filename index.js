@@ -30,7 +30,7 @@ export default async function setupRehoster (
       return res
     }
 
-    await rehoster.addCore(hexKey)
+    await rehoster.addCore(hexKey, { doSync: false })
     console.log(`${new Date().toISOString()}--Added key:${hexKey}`)
 
     res.sendStatus(200)

@@ -9,7 +9,8 @@ import setupServer from './index.js'
 describe('Rehost server tests', function () {
   let server
   let testnet, swarm
-  const url = 'http://localhost:50000/'
+  const port = 50584
+  const url = `http://localhost:${port}/`
   const key = 'a'.repeat(64)
 
   this.beforeEach(async function () {
@@ -17,7 +18,7 @@ describe('Rehost server tests', function () {
     const bootstrap = testnet.bootstrap
     swarm = new Hyperswarm({ bootstrap })
 
-    server = await setupServer(ram, { swarm })
+    server = await setupServer(ram, { swarm, port })
   })
 
   this.afterEach(async function () {
