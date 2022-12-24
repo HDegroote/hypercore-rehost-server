@@ -37,5 +37,8 @@ describe('Rehost server tests', function () {
     res = await axios.get(url)
     expect(res.status).to.equal(200)
     expect(res.data).to.deep.equal([key])
+
+    res = await axios.put(`${url}sync`)
+    expect(res.status).to.equal(200)
   })
 })
