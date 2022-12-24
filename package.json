@@ -1,6 +1,6 @@
 {
   "name": "hypercore-rehost-server",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "description": "Minimal server on top of hypercore-rehoster",
   "main": "index.js",
