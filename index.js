@@ -13,8 +13,12 @@ export default async function setupRehoster (
   const corestore = new Corestore(corestoreLoc)
 
   const rehoster = await Rehoster.initFrom({ beeName, corestore, swarm })
-  await rehoster.ready()
   const app = express()
+
+  app.put('/sync', async function (req, res) {
+    await rehoster.syncWithDb()
+    res.sendStatus(200)
+  })
 
   app.put('/:hexKey', async function (req, res) {
     const { hexKey } = req.params
