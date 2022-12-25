@@ -33,6 +33,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "hexkey-utils": "^1.0.1",
-    "hypercore-rehoster": "~0.3.0"
+    "hypercore-rehoster": "~0.3.0",
+    "signal-promise": "^1.0.3"
   }
 }
