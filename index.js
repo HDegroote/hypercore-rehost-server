@@ -4,15 +4,18 @@ import express from 'express'
 import { validateKey } from 'hexkey-utils'
 import Rehoster from 'hypercore-rehoster'
 import Hyperswarm from 'hyperswarm'
+import Signal from 'signal-promise'
 
 export default async function setupRehoster (
   corestoreLoc,
-  { host = 'localhost', port = 50000, beeName = 'rehoster-keyset', swarm = undefined } = {}
+  { host = undefined, port = undefined, beeName = 'rehoster-keyset', swarm = undefined } = {}
 ) {
   swarm ??= new Hyperswarm()
   const corestore = new Corestore(corestoreLoc)
 
-  const rehoster = await Rehoster.initFrom({ beeName, corestore, swarm })
+  const rehoster = await Rehoster.initFrom(
+    { beeName, corestore, swarm, doSync: false }
+  )
   const app = express()
 
   app.put('/sync', async function (req, res) {
@@ -41,10 +44,22 @@ export default async function setupRehoster (
   })
 
   const listener = app.listen(port, host)
-  listener.on('close', () => {
+  listener.on('close', async () => {
     console.log('closing rehoster')
-    rehoster.close()
+    await rehoster.close()
+    console.log('Closed rehoster')
   })
+
+  const sig = new Signal()
+  listener.on(
+    'listening',
+    () => {
+      const address = listener.address()
+      console.log(`Rehoster listening on ${address.address} on port ${address.port}`)
+      sig.notify()
+    }
+  )
+  await sig.wait()
 
   return listener
 }
