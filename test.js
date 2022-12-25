@@ -3,14 +3,14 @@ import ram from 'random-access-memory'
 import axios from 'axios'
 import createTestnet from '@hyperswarm/testnet'
 import Hyperswarm from 'hyperswarm'
+import Signal from 'signal-promise'
 
 import setupServer from './index.js'
 
 describe('Rehost server tests', function () {
   let server
   let testnet, swarm
-  const port = 50584
-  const url = `http://localhost:${port}/`
+  let url
   const key = 'a'.repeat(64)
 
   this.beforeEach(async function () {
@@ -18,13 +18,17 @@ describe('Rehost server tests', function () {
     const bootstrap = testnet.bootstrap
     swarm = new Hyperswarm({ bootstrap })
 
-    server = await setupServer(ram, { swarm, port })
+    server = await setupServer(ram, { swarm })
+    url = `http://localhost:${server.address().port}/`
   })
 
   this.afterEach(async function () {
     await swarm.destroy()
     await testnet.destroy()
-    server.close()
+
+    const sig = new Signal()
+    server.close(() => sig.notify())
+    await sig.wait()
   })
 
   it('Can put a new key', async function () {
