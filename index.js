@@ -18,6 +18,8 @@ export default async function setupRehoster (
   )
   const app = express()
 
+  const initSyncProm = rehoster.syncWithDb()
+
   app.put('/sync', async function (req, res) {
     await rehoster.syncWithDb()
     res.sendStatus(200)
@@ -59,7 +61,8 @@ export default async function setupRehoster (
       sig.notify()
     }
   )
-  await sig.wait()
+  await Promise.all([sig.wait(), initSyncProm])
+  console.log('Synced db with rehoster (init sync)')
 
   return listener
 }
