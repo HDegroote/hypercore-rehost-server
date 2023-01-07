@@ -4,8 +4,10 @@ import axios from 'axios'
 import createTestnet from '@hyperswarm/testnet'
 import Hyperswarm from 'hyperswarm'
 import Signal from 'signal-promise'
+import Corestore from 'corestore'
+import Rehoster from 'hypercore-rehoster'
 
-import setupServer from './index.js'
+import setupRehostServer from './lib/server.js'
 
 describe('Rehost server tests', function () {
   let server
@@ -18,7 +20,10 @@ describe('Rehost server tests', function () {
     const bootstrap = testnet.bootstrap
     swarm = new Hyperswarm({ bootstrap })
 
-    server = await setupServer(ram, { swarm })
+    const corestore = new Corestore(ram)
+
+    const rehoster = await Rehoster.initFrom({ corestore, swarm, doSync: false })
+    server = await setupRehostServer(rehoster)
     url = `http://localhost:${server.address().port}/`
   })
 

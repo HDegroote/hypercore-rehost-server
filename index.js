@@ -1,68 +1,58 @@
-
+import loadConfig from './lib/config.js'
+import setupLogger from 'pino'
+import goodbye from 'graceful-goodbye'
 import Corestore from 'corestore'
-import express from 'express'
-import { validateKey } from 'hexkey-utils'
 import Rehoster from 'hypercore-rehoster'
 import Hyperswarm from 'hyperswarm'
-import Signal from 'signal-promise'
+import { asHex } from 'hexkey-utils'
 
-export default async function setupRehoster (
-  corestoreLoc,
-  { host = undefined, port = undefined, beeName = 'rehoster-keyset', swarm = undefined } = {}
-) {
-  swarm ??= new Hyperswarm()
-  const corestore = new Corestore(corestoreLoc)
+import setupRehostServer from './lib/server.js'
 
-  const rehoster = await Rehoster.initFrom(
-    { beeName, corestore, swarm, doSync: false }
+async function main () {
+  const config = loadConfig()
+  const logger = setupLogger(
+    { name: 'rehost-server', level: config.LOG_LEVEL }
   )
-  const app = express()
 
-  const initSyncProm = rehoster.syncWithDb()
-
-  app.put('/sync', async function (req, res) {
-    await rehoster.syncWithDb()
-    res.sendStatus(200)
+  const rehoster = await setupRehoster(config, logger)
+  const server = await setupRehostServer(rehoster, {
+    host: config.HOST,
+    port: config.PORT,
+    logger
   })
 
-  app.put('/:hexKey', async function (req, res) {
-    const { hexKey } = req.params
-    try {
-      validateKey(hexKey)
-    } catch (error) {
-      console.log('Bad request for key', hexKey, error.message)
-      res.status(400).send({ message: error.message })
-      return res
-    }
-
-    await rehoster.addCore(hexKey, { doSync: false })
-    console.log(`${new Date().toISOString()}--Added key:${hexKey}`)
-
-    res.sendStatus(200)
+  goodbye(async () => {
+    logger.info('Closing down rehoster and server')
+    await Promise.all([rehoster.close(), server.close()])
+    logger.info('Closed down successfully--exiting program')
   })
-
-  app.get('/', async function (req, res) {
-    res.json(Array.from(await rehoster.dbInterface.getHexKeys()))
-  })
-
-  const listener = app.listen(port, host)
-  listener.on('close', async () => {
-    console.log('closing rehoster')
-    await rehoster.close()
-    console.log('Closed rehoster')
-  })
-
-  const sig = new Signal()
-  listener.on(
-    'listening',
-    () => {
-      const address = listener.address()
-      console.log(`Rehoster listening on ${address.address} on port ${address.port}`)
-      sig.notify()
-    }
-  )
-  await Promise.all([sig.wait(), initSyncProm])
-  console.log('Synced db with rehoster (init sync)')
-
-  return listener
 }
+
+async function setupRehoster (config, logger) {
+  const corestore = new Corestore(config.CORESTORE_LOC)
+  const swarm = setupSwarm(logger)
+
+  return await Rehoster.initFrom(
+    { beeName: config.BEE_NAME, corestore, swarm, doSync: false }
+  )
+}
+
+function setupSwarm (logger) {
+  let nrConnections = 0
+  const swarm = new Hyperswarm()
+
+  swarm.on('connection', (socket, peerInfo) => {
+    nrConnections++
+    const key = asHex(peerInfo.publicKey)
+
+    logger.info(`Connection opened with ${key}--total: ${nrConnections}\n`)
+    socket.on('close', () => {
+      nrConnections--
+      logger.info(`Connection closed with ${key}--total: ${nrConnections}`)
+    })
+  })
+
+  return swarm
+}
+
+main()
