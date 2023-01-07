@@ -1,4 +1,4 @@
-import setupRehoster from './index.js'
+import setupRehoster from './lib/server.js'
 import axios from 'axios'
 
 const corestoreLoc = './my-store'
