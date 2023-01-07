@@ -17,6 +17,8 @@ If you wish them to be human-readable, pipe them into pino-pretty (which needs t
 
 `serve-rehoster | pino-pretty`
 
+See [example.js](example.js) for how to call the server's endpoints.
+
 ## Config
 
 Config variables include:
