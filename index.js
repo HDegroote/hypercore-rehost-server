@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import loadConfig from './lib/config.js'
 import setupLogger from 'pino'
 import goodbye from 'graceful-goodbye'
