@@ -4,9 +4,11 @@ Simple server to keep hypercores available.
 
 A CLI to interact with this server is provided at [hypercore-rehost-cli](https://gitlab.com/HDegroote/hypercore-rehost-cli).
 
+Note: if not running on a personal computer, you will almost certainly want to firewall the port this server is running on, as it is an http server without any authentication.
+
 ## Install
 
-npm -g i hypercore-rehost-server
+`npm -g i hypercore-rehost-server`
 
 ## Usage
 
@@ -33,7 +35,7 @@ Config variables include:
   - Port where the server runs (uses express's default if not defined)
 
 
-RC is used to define the config, with application name `REHOST_SERVER`. See their [website](https://www.npmjs.com/package/rc) for all config options.
+RC is used to define the config, with application name `REHOST_SERVER`. See [here](https://www.npmjs.com/package/rc) for all config options.
 
 The simplest ones are to either:
 
@@ -41,7 +43,7 @@ The simplest ones are to either:
 `serve-rehoster --PORT 40000 --CORESTORE_LOC './my-loc'`
 
 
-#### Define a .REHOST_SERVERrc file
+#### Or to define a .REHOST_SERVERrc file
 ```
 CORESTORE_LOC = 'other-corestore',
 BEE_NAME = 'other-bee',
