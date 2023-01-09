@@ -12,12 +12,12 @@ Note: if not running on a personal computer, you will almost certainly want to f
 
 ## Usage
 
-`serve-rehoster`
+`rehost-server`
 
 By default, the logs are in JSON format.
 If you wish them to be human-readable, pipe them into pino-pretty (which needs to be installed):
 
-`serve-rehoster | pino-pretty`
+`rehost-server | pino-pretty`
 
 See [example.js](example.js) for how to call the server's endpoints.
 
@@ -40,8 +40,7 @@ RC is used to define the config, with application name `REHOST_SERVER`. See [her
 The simplest ones are to either:
 
 #### Pass them on the command line
-`serve-rehoster --PORT 40000 --CORESTORE_LOC './my-loc'`
-
+`rehost-server --PORT 40000 --CORESTORE_LOC './my-loc'`
 
 #### Or to define a .REHOST_SERVERrc file
 ```
