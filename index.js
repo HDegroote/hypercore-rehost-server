@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
+import { fileURLToPath } from 'url'
 import loadConfig from './lib/config.js'
 import setupLogger from 'pino'
 import goodbye from 'graceful-goodbye'
@@ -70,4 +71,8 @@ function setupSwarm (logger) {
   return swarm
 }
 
-main()
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main()
+}
+
+export default setupRehostServer
