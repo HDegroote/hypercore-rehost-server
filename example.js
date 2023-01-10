@@ -30,5 +30,12 @@ if (nowKeys.length > 0) {
 console.log('Sync the keys-db with the swarm')
 await axios.put(`${url}sync`)
 
+console.log('Remove a key')
+await axios.delete(`${url}${discoveryKey}`)
+
+const postDelKeys = (await axios.get(url)).data
+console.log(`Post deletion nr keys left: ${postDelKeys.length}`)
+// note: the key will be unannounced only after the next sync
+
 server.close()
 await rehoster.close()
