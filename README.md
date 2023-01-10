@@ -33,6 +33,8 @@ Config variables include:
   - Address where the server runs (uses express's default if not defined)
 - PORT
   - Port where the server runs (uses express's default if not defined)
+- HOURS_SYNC_INTERVAL
+  - Hours between each autosync (no autosync by default)
 
 
 RC is used to define the config, with application name `REHOST_SERVER`. See [here](https://www.npmjs.com/package/rc) for all config options.

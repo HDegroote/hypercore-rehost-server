@@ -9,6 +9,7 @@ import Hyperswarm from 'hyperswarm'
 import { asHex } from 'hexkey-utils'
 
 import setupRehostServer from './lib/server.js'
+import { logRehostingInfo } from './lib/utils.js'
 
 async function main () {
   const config = loadConfig()
@@ -22,6 +23,21 @@ async function main () {
     port: config.PORT,
     logger
   })
+
+  const hoursSyncInterval = config.HOURS_SYNC_INTERVAL
+  if (hoursSyncInterval) {
+    setInterval(
+      async () => {
+        logger.info(`Starting scheduled sync with db (running every ${hoursSyncInterval} hours)`)
+        await rehoster.syncWithDb
+        logger.info('Finished scheduled sync with db')
+        logRehostingInfo(rehoster, logger)
+      }, hoursSyncInterval * 60 * 60 * 1000
+    )
+    logger.info(`Set up an automatic sync which will run once every ${hoursSyncInterval} hours`)
+  } else {
+    logger.info('Not setting up any automatic sync')
+  }
 
   goodbye(async () => {
     logger.info('Closing down rehoster and server')
@@ -40,17 +56,14 @@ async function setupRehoster (config, logger) {
 }
 
 function setupSwarm (logger) {
-  let nrConnections = 0
   const swarm = new Hyperswarm()
 
   swarm.on('connection', (socket, peerInfo) => {
-    nrConnections++
     const key = asHex(peerInfo.publicKey)
 
-    logger.info(`Connection opened with ${key}--total: ${nrConnections}\n`)
+    logger.info(`Connection opened with ${key}--total: ${swarm.connections.size}`)
     socket.on('close', () => {
-      nrConnections--
-      logger.info(`Connection closed with ${key}--total: ${nrConnections}`)
+      logger.info(`Connection closed with ${key}--total: ${swarm.connections.size}`)
     })
   })
 
