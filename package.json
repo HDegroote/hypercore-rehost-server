@@ -3,7 +3,7 @@
   "version": "0.5.2",
   "type": "module",
   "bin": {
-    "rehost-server": "./index.js"
+    "rehost-server": "./run.js"
   },
   "description": "Minimal server on top of hypercore-rehoster",
   "main": "index.js",
