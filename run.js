@@ -29,7 +29,7 @@ async function main () {
     setInterval(
       async () => {
         logger.info(`Starting scheduled sync with db (running every ${hoursSyncInterval} hours)`)
-        await rehoster.syncWithDb
+        await rehoster.syncWithDb()
         logger.info('Finished scheduled sync with db')
         logRehostingInfo(rehoster, logger)
       }, hoursSyncInterval * 60 * 60 * 1000
