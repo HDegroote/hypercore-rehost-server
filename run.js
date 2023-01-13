@@ -48,20 +48,30 @@ async function main () {
 
 async function setupRehoster (config, logger) {
   const corestore = new Corestore(config.CORESTORE_LOC)
-  const swarm = setupSwarm(logger)
+  const swarm = setupSwarm(logger, corestore)
 
   return await Rehoster.initFrom(
     { beeName: config.BEE_NAME, corestore, swarm, doSync: false }
   )
 }
 
-function setupSwarm (logger) {
+function setupSwarm (logger, corestore) {
   const swarm = new Hyperswarm()
 
   swarm.on('connection', (socket, peerInfo) => {
     const key = asHex(peerInfo.publicKey)
 
     logger.info(`Connection opened with ${key}--total: ${swarm.connections.size}`)
+    if (logger.level === 'debug' && peerInfo.topics && peerInfo.topics.length > 0) {
+      const hexDiscKeys = peerInfo.topics.map(t => asHex(t)).sort()
+      // Might be that the peerInfo topics are always known to us, in which case the check is redundant
+      const keyMap = hexDiscKeys.map(
+        k => `${k} <-- ${corestore.cores.get(k) ? asHex(corestore.cores.get(k).key) : 'Not known'}`
+      )
+      logger.debug(`Peer ${key} topics (disc key <-- pub key):\n  - ` +
+        `${keyMap.join('\n  - ')}`)
+    }
+
     socket.on('close', () => {
       logger.info(`Connection closed with ${key}--total: ${swarm.connections.size}`)
     })
