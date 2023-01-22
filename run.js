@@ -8,6 +8,7 @@ import Rehoster from 'hypercore-rehoster'
 import Hyperswarm from 'hyperswarm'
 import { asHex } from 'hexkey-utils'
 
+import { logRehostingInfo } from './lib/utils.js'
 import setupRehostServer from './lib/server.js'
 
 async function main () {
@@ -23,6 +24,15 @@ async function main () {
     port: config.PORT,
     logger
   })
+
+  const minutesLogInterval = config.MIN_LOG_SUMMARY_INTERVAL
+  if (minutesLogInterval) {
+    setInterval(
+      async () => {
+        logRehostingInfo(rehoster, logger)
+      }, minutesLogInterval * 60 * 1000
+    )
+  }
 
   goodbye(async () => {
     logger.info('Closing down rehoster and server')
