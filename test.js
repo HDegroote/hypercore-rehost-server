@@ -52,5 +52,12 @@ describe('Rehost server tests', function () {
     res = await axios.get(url)
     expect(res.status).to.equal(200)
     expect(res.data).to.deep.equal([])
+
+    res = await axios.get(`${url}info`)
+    expect(res.status).to.equal(200)
+    expect(Object.keys(res.data)).to.deep.have.same.members(['info', 'details'])
+    expect(res.data.info).to.equal(
+      'Nr announced (served) keys: 1 -- Nr replicated-but-not-announced keys: 0 -- Nr open connections: 0'
+    )
   })
 })

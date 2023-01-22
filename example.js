@@ -33,5 +33,11 @@ await axios.delete(`${url}${discoveryKey}`)
 const postDelKeys = (await axios.get(url)).data
 console.log(`Post deletion nr keys left: ${postDelKeys.length}`)
 
+console.log('\nMore detailed info: actually hosted keys (including recursion)')
+
+const { info, details } = (await axios.get(`${url}info`)).data
+console.log(info, '\n')
+console.log(details)
+
 server.close()
 await rehoster.close()
