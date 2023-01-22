@@ -3,7 +3,6 @@ import ram from 'random-access-memory'
 import axios from 'axios'
 import createTestnet from '@hyperswarm/testnet'
 import Hyperswarm from 'hyperswarm'
-import Signal from 'signal-promise'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
 
@@ -13,6 +12,7 @@ describe('Rehost server tests', function () {
   let server
   let testnet, swarm
   let url
+  let rehoster
   const key = 'a'.repeat(64)
 
   this.beforeEach(async function () {
@@ -22,7 +22,7 @@ describe('Rehost server tests', function () {
 
     const corestore = new Corestore(ram)
 
-    const rehoster = await Rehoster.initFrom({ corestore, swarm, doSync: false })
+    rehoster = await Rehoster.initFrom({ corestore, swarm })
     server = await setupRehostServer(rehoster)
     url = `http://localhost:${server.address().port}/`
   })
@@ -31,9 +31,7 @@ describe('Rehost server tests', function () {
     await swarm.destroy()
     await testnet.destroy()
 
-    const sig = new Signal()
-    server.close(() => sig.notify())
-    await sig.wait()
+    await server.close()
   })
 
   it('can use the api', async function () {
@@ -47,9 +45,6 @@ describe('Rehost server tests', function () {
     res = await axios.get(url)
     expect(res.status).to.equal(200)
     expect(res.data).to.deep.equal([key])
-
-    res = await axios.put(`${url}sync`)
-    expect(res.status).to.equal(200)
 
     res = await axios.delete(`${url}${key}`)
     expect(res.status).to.equal(204)

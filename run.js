@@ -9,7 +9,6 @@ import Hyperswarm from 'hyperswarm'
 import { asHex } from 'hexkey-utils'
 
 import setupRehostServer from './lib/server.js'
-import { logRehostingInfo } from './lib/utils.js'
 
 async function main () {
   const config = loadConfig()
@@ -17,27 +16,13 @@ async function main () {
     { name: 'rehost-server', level: config.LOG_LEVEL }
   )
 
-  const rehoster = await setupRehoster(config, logger)
+  const rehoster = await initRehoster(config, logger)
+
   const server = await setupRehostServer(rehoster, {
     host: config.HOST,
     port: config.PORT,
     logger
   })
-
-  const hoursSyncInterval = config.HOURS_SYNC_INTERVAL
-  if (hoursSyncInterval) {
-    setInterval(
-      async () => {
-        logger.info(`Starting scheduled sync with db (running every ${hoursSyncInterval} hours)`)
-        await rehoster.syncWithDb()
-        logger.info('Finished scheduled sync with db')
-        logRehostingInfo(rehoster, logger)
-      }, hoursSyncInterval * 60 * 60 * 1000
-    )
-    logger.info(`Set up an automatic sync which will run once every ${hoursSyncInterval} hours`)
-  } else {
-    logger.info('Not setting up any automatic sync')
-  }
 
   goodbye(async () => {
     logger.info('Closing down rehoster and server')
@@ -46,13 +31,22 @@ async function main () {
   })
 }
 
-async function setupRehoster (config, logger) {
+async function initRehoster (config, logger) {
   const corestore = new Corestore(config.CORESTORE_LOC)
   const swarm = setupSwarm(logger, corestore)
 
-  return await Rehoster.initFrom(
-    { beeName: config.BEE_NAME, corestore, swarm, doSync: false }
+  const rehoster = await Rehoster.initFrom(
+    { beeName: config.BEE_NAME, corestore, swarm }
   )
+
+  rehoster.on('invalidKey', ({ invalidKey, rehosterKey }) => {
+    logger.warn(
+      `Rehoster at key ${asHex(rehosterKey)}` +
+      ` contains an invalid key: ${asHex(invalidKey)}--ignoring`
+    )
+  })
+
+  return rehoster
 }
 
 function setupSwarm (logger, corestore) {
