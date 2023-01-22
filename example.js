@@ -19,8 +19,8 @@ if (initKeys.length > 0) {
 }
 
 console.log('\nAdd a key')
-const discoveryKey = 'b'.repeat(64)
-await axios.put(`${url}${discoveryKey}`)
+const publicKey = 'b'.repeat(64)
+await axios.put(`${url}${publicKey}`)
 
 const nowKeys = (await axios.get(url)).data
 if (nowKeys.length > 0) {
@@ -28,7 +28,7 @@ if (nowKeys.length > 0) {
 }
 
 console.log('\nRemove a key')
-await axios.delete(`${url}${discoveryKey}`)
+await axios.delete(`${url}${publicKey}`)
 
 const postDelKeys = (await axios.get(url)).data
 console.log(`Post deletion nr keys left: ${postDelKeys.length}`)
