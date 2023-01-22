@@ -7,9 +7,9 @@ import Rehoster from 'hypercore-rehoster'
 const corestoreLoc = './my-store'
 const swarm = new Hyperswarm()
 const corestore = new Corestore(corestoreLoc)
-const rehoster = await Rehoster.initFrom({ corestore, swarm, doSync: false })
+const rehoster = await Rehoster.initFrom({ corestore, swarm })
 
-console.log('Setting up rehost server (announces all cores in the db, so can take a while)')
+console.log('Setting up rehost server')
 const server = await setupRehostServer(rehoster)
 
 const url = `http://localhost:${server.address().port}/`
@@ -18,7 +18,7 @@ if (initKeys.length > 0) {
   console.log(`Initial keys:\n\t-${initKeys.join('\n\t-')}`)
 }
 
-console.log('Add a key')
+console.log('\nAdd a key')
 const discoveryKey = 'b'.repeat(64)
 await axios.put(`${url}${discoveryKey}`)
 
@@ -27,15 +27,11 @@ if (nowKeys.length > 0) {
   console.log(`Now keys:\n\t-${nowKeys.join('\n\t-')}`)
 }
 
-console.log('Sync the keys-db with the swarm')
-await axios.put(`${url}sync`)
-
-console.log('Remove a key')
+console.log('\nRemove a key')
 await axios.delete(`${url}${discoveryKey}`)
 
 const postDelKeys = (await axios.get(url)).data
 console.log(`Post deletion nr keys left: ${postDelKeys.length}`)
-// note: the key will be unannounced only after the next sync
 
 server.close()
 await rehoster.close()
