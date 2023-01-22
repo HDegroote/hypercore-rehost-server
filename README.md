@@ -19,7 +19,25 @@ If you wish them to be human-readable, pipe them into pino-pretty (which needs t
 
 `rehost-server | pino-pretty`
 
-See [example.js](example.js) for how to call the server's endpoints.
+## Endpoints
+
+See also [example.js](example.js) for examples of how to call the server's endpoints.
+
+#### `GET /`
+List all keys directly contained in the rehoster
+
+#### `PUT /<public-key>`
+Add the core with the specified public key (in hex) to the rehoster
+
+#### `DELETE /<public-key>`
+Delete the core with the specified public key (in hex) from the rehoster
+
+#### `GET /info`
+Returns a JSON with keys `info` and `details`, and string values.
+
+Info contains a summary of the total nr of hosted keys (including recursively hosted ones).
+
+Details contains basic info for all hosted keys (including recursively hosted ones).
 
 ## Config
 
