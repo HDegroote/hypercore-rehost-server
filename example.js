@@ -1,13 +1,11 @@
 import setupRehostServer from './lib/server.js'
 import axios from 'axios'
-import Hyperswarm from 'hyperswarm'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
 
 const corestoreLoc = './my-store'
-const swarm = new Hyperswarm()
 const corestore = new Corestore(corestoreLoc)
-const rehoster = await Rehoster.initFrom({ corestore, swarm })
+const rehoster = new Rehoster(corestore)
 
 console.log('Setting up rehost server')
 const server = await setupRehostServer(rehoster)

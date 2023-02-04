@@ -22,7 +22,7 @@ describe('Rehost server tests', function () {
 
     const corestore = new Corestore(ram)
 
-    rehoster = await Rehoster.initFrom({ corestore, swarm })
+    rehoster = new Rehoster(corestore, { swarm })
     server = await setupRehostServer(rehoster)
     url = `http://localhost:${server.address().port}/`
   })
