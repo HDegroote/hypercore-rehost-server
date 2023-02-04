@@ -49,6 +49,10 @@ describe('Rehost server tests', function () {
     res = await axios.delete(`${url}${key}`)
     expect(res.status).to.equal(204)
 
+    // Note: not usually necessary to wait
+    // but saw it fail once
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
     res = await axios.get(url)
     expect(res.status).to.equal(200)
     expect(res.data).to.deep.equal([])
