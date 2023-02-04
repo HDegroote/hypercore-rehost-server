@@ -45,8 +45,7 @@ async function initRehoster (config, logger) {
   const corestore = new Corestore(config.CORESTORE_LOC)
   const swarm = setupSwarm(logger, corestore)
 
-  const rehoster = await Rehoster.initFrom(
-    { beeName: config.BEE_NAME, corestore, swarm }
+  const rehoster = new Rehoster(corestore, { beeName: config.BEE_NAME, swarm }
   )
 
   rehoster.on('invalidKey', ({ invalidKey, rehosterKey }) => {
