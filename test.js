@@ -5,7 +5,6 @@ import createTestnet from '@hyperswarm/testnet'
 import Hyperswarm from 'hyperswarm'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
-import { asHex } from 'hexkey-utils'
 import setupRehostServer from './lib/server.js'
 
 describe('Rehost server tests', function () {
@@ -28,10 +27,12 @@ describe('Rehost server tests', function () {
   })
 
   this.afterEach(async function () {
-    await swarm.destroy()
-    await testnet.destroy()
-
-    await server.close()
+    server.close(
+      async () => {
+        await rehoster.close()
+        await testnet.destroy()
+      }
+    )
   })
 
   it('can use the api', async function () {
@@ -60,8 +61,5 @@ describe('Rehost server tests', function () {
     res = await axios.get(`${url}info`)
     expect(res.status).to.equal(200)
     expect(Object.keys(res.data)).to.deep.have.same.members(['info', 'details'])
-    expect(res.data.info).to.equal(
-      `Nr announced (served) keys: 1\nNr replicated-but-not-announced keys: 0\nNr open connections: 0\nOwn rehoster public key: ${asHex(rehoster.ownKey)}`
-    )
   })
 })

@@ -29,14 +29,14 @@ async function main () {
   if (minutesLogInterval) {
     setInterval(
       async () => {
-        logRehostingInfo(rehoster, logger)
+        await logRehostingInfo(rehoster, logger)
       }, minutesLogInterval * 60 * 1000
     )
   }
 
   goodbye(async () => {
     logger.info('Closing down rehoster and server')
-    await Promise.all([rehoster.close(), server.close()])
+    server.close(async () => await rehoster.close())
     logger.info('Closed down successfully--exiting program')
   })
 }

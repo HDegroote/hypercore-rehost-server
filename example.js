@@ -1,7 +1,8 @@
-import setupRehostServer from './lib/server.js'
 import axios from 'axios'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
+
+import setupRehostServer from './lib/server.js'
 
 const corestoreLoc = './my-store'
 const corestore = new Corestore(corestoreLoc)
@@ -12,9 +13,7 @@ const server = await setupRehostServer(rehoster)
 
 const url = `http://localhost:${server.address().port}/`
 const initKeys = (await axios.get(url)).data
-if (initKeys.length > 0) {
-  console.log(`Initial keys:\n\t-${initKeys.join('\n\t-')}`)
-}
+console.log(`Initial keys:\n\t-${initKeys.join('\n\t-')}`)
 
 console.log('\nAdd a key')
 const publicKey = 'b'.repeat(64)
@@ -25,17 +24,16 @@ if (nowKeys.length > 0) {
   console.log(`Now keys:\n\t-${nowKeys.join('\n\t-')}`)
 }
 
+const { details } = (await axios.get(`${url}info`)).data
+console.log('\n', details) // Includes your own core
+
 console.log('\nRemove a key')
 await axios.delete(`${url}${publicKey}`)
 
-const postDelKeys = (await axios.get(url)).data
-console.log(`Post deletion nr keys left: ${postDelKeys.length}`)
+const finalKeys = (await axios.get(url)).data
 
-console.log('\nMore detailed info: actually hosted keys (including recursion)')
+console.log(`Final keys:\n\t-${finalKeys.join('\n\t-')}`)
 
-const { info, details } = (await axios.get(`${url}info`)).data
-console.log(info, '\n')
-console.log(details)
-
-server.close()
-await rehoster.close()
+server.close(
+  async () => await rehoster.close()
+)
