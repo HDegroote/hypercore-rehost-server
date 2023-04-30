@@ -7,6 +7,7 @@ import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
 import Hyperswarm from 'hyperswarm'
 import { asHex } from 'hexkey-utils'
+import DHT from 'hyperdht'
 
 import { logRehostingInfo } from './lib/utils.js'
 import setupRehostServer from './lib/server.js'
@@ -43,7 +44,7 @@ async function main () {
 
 async function initRehoster (config, logger) {
   const corestore = new Corestore(config.CORESTORE_LOC)
-  const swarm = setupSwarm(logger, corestore)
+  const swarm = setupSwarm(logger, corestore, config.SWARM_PORT)
 
   const rehoster = new Rehoster(corestore, { beeName: config.BEE_NAME, swarm }
   )
@@ -58,8 +59,9 @@ async function initRehoster (config, logger) {
   return rehoster
 }
 
-function setupSwarm (logger, corestore) {
-  const swarm = new Hyperswarm()
+function setupSwarm (logger, corestore, port) {
+  const dht = new DHT({ port })
+  const swarm = new Hyperswarm(dht)
 
   swarm.on('connection', (socket, peerInfo) => {
     const key = asHex(peerInfo.publicKey)

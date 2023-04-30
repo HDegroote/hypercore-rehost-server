@@ -41,6 +41,7 @@
     "graceful-goodbye": "^1.2.0",
     "hexkey-utils": "^1.0.2",
     "hypercore-rehoster": "~0.9.1",
+    "hyperdht": "^6.5.3",
     "pino": "^8.8.0",
     "rc": "^1.2.8"
   }
