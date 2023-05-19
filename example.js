@@ -1,12 +1,14 @@
 import axios from 'axios'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
+import Hyperswarm from 'hyperswarm'
+import SwarmManager from 'swarm-manager'
 
 import setupRehostServer from './lib/server.js'
 
 const corestoreLoc = './my-store'
 const corestore = new Corestore(corestoreLoc)
-const rehoster = new Rehoster(corestore)
+const rehoster = getRehoster(corestore, new Hyperswarm())
 
 console.log('Setting up rehost server')
 const server = await setupRehostServer(rehoster)
@@ -35,5 +37,18 @@ const finalKeys = (await axios.get(url)).data
 console.log(`Final keys:\n\t-${finalKeys.join('\n\t-')}`)
 
 server.close(
-  async () => await rehoster.close()
+  async () => await Promise.all([rehoster.close(), rehoster.swarmManager.close()])
 )
+
+function getRehoster (store, swarm) {
+  swarm.on('connection', (socket) => {
+    store.replicate(socket)
+    socket.on('error', () => {})
+  })
+
+  const swarmManager = new SwarmManager(swarm)
+  return new Rehoster(
+    store.namespace('rehoster'),
+    swarmManager
+  )
+}

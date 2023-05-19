@@ -40,9 +40,11 @@
     "express": "^4.18.2",
     "graceful-goodbye": "^1.2.0",
     "hexkey-utils": "^1.0.2",
-    "hypercore-rehoster": "~0.10.0",
+    "hypercore-rehoster": "~0.11.0",
     "hyperdht": "^6.5.3",
+    "hyperswarm": "^4.4.1",
     "pino": "^8.8.0",
-    "rc": "^1.2.8"
+    "rc": "^1.2.8",
+    "swarm-manager": "0.0.1-alpha.2"
   }
 }
