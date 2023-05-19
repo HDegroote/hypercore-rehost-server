@@ -8,6 +8,7 @@ import Rehoster from 'hypercore-rehoster'
 import Hyperswarm from 'hyperswarm'
 import { asHex } from 'hexkey-utils'
 import DHT from 'hyperdht'
+import SwarmManager from 'swarm-manager'
 
 import { logRehostingInfo } from './lib/utils.js'
 import setupRehostServer from './lib/server.js'
@@ -45,8 +46,9 @@ async function main () {
 async function initRehoster (config, logger) {
   const corestore = new Corestore(config.CORESTORE_LOC)
   const swarm = setupSwarm(logger, corestore, config.SWARM_PORT)
+  const manager = new SwarmManager(swarm)
 
-  const rehoster = new Rehoster(corestore, { beeName: config.BEE_NAME, swarm }
+  const rehoster = new Rehoster(corestore, manager, { beeName: config.BEE_NAME }
   )
 
   rehoster.on('invalidKey', ({ invalidKey, rehosterKey }) => {

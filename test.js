@@ -6,10 +6,12 @@ import Hyperswarm from 'hyperswarm'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
 import setupRehostServer from './lib/server.js'
+import SwarmManager from 'swarm-manager'
+import safetyCatch from 'safety-catch'
 
 describe('Rehost server tests', function () {
   let server
-  let testnet, swarm
+  let testnet, swarm, swarmManager
   let url
   let rehoster
   const key = 'a'.repeat(64)
@@ -20,8 +22,13 @@ describe('Rehost server tests', function () {
     swarm = new Hyperswarm({ bootstrap })
 
     const corestore = new Corestore(ram)
+    swarmManager = new SwarmManager(swarm)
+    swarm.on('connection', socket => {
+      corestore.replicate(socket)
+      corestore.on('error', safetyCatch)
+    })
 
-    rehoster = new Rehoster(corestore, { swarm })
+    rehoster = new Rehoster(corestore, swarmManager)
     server = await setupRehostServer(rehoster)
     url = `http://localhost:${server.address().port}/`
   })
@@ -30,6 +37,7 @@ describe('Rehost server tests', function () {
     server.close(
       async () => {
         await rehoster.close()
+        await swarmManager.close()
         await testnet.destroy()
       }
     )
