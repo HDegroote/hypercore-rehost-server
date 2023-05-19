@@ -45,6 +45,7 @@
     "hyperswarm": "^4.4.1",
     "pino": "^8.8.0",
     "rc": "^1.2.8",
-    "swarm-manager": "0.0.1-alpha.2"
+    "swarm-manager": "0.0.1-alpha.2",
+    "tiny-byte-size": "^1.1.0"
   }
 }
