@@ -66,6 +66,9 @@ function setupSwarm (logger, corestore, port) {
   const swarm = new Hyperswarm(dht)
 
   swarm.on('connection', (socket, peerInfo) => {
+    corestore.replicate(socket)
+    socket.on('error', e => console.log(e)) // Usually just unexpectedly closed
+
     const key = asHex(peerInfo.publicKey)
 
     logger.info(`Connection opened with ${key}--total: ${swarm.connections.size}`)
