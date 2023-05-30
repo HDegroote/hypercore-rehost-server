@@ -24,11 +24,14 @@ If you wish them to be human-readable, pipe them into pino-pretty (which needs t
 See also [example.js](example.js) for examples of how to call the server's endpoints.
 
 #### `GET /`
-List all keys directly contained in the rehoster
+List all entries directly contained in the rehoster.
+
+Entries are of the from `{key, info?}`.
 
 #### `PUT /<public-key>`
-Add the core with the specified public key (in hex) to the rehoster
+Add the core with the specified public key (in hex) to the rehoster.
 
+Also accepts optional JSON data of form `{ info: <str> }`
 #### `DELETE /<public-key>`
 Delete the core with the specified public key (in hex) from the rehoster
 
