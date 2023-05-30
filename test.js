@@ -34,13 +34,22 @@ describe('Rehost server tests', function () {
   })
 
   this.afterEach(async function () {
-    server.close(
-      async () => {
-        await rehoster.close()
-        await swarmManager.close()
-        await testnet.destroy()
-      }
-    )
+    await new Promise(resolve => server.close(() => resolve()))
+
+    await rehoster.close()
+    await swarmManager.close()
+    await testnet.destroy()
+  })
+
+  it('Can put key with info', async function () {
+    const putRes = await axios.put(`${url}${key}`, { info: 'A key' })
+    expect(putRes.status).to.equal(200)
+
+    const getRes = await axios.get(url)
+    expect(getRes.status).to.equal(200)
+    expect(getRes.data).to.deep.equal([{
+      key, info: 'A key'
+    }])
   })
 
   it('can use the api', async function () {
@@ -48,12 +57,12 @@ describe('Rehost server tests', function () {
     expect(res.status).to.equal(200)
     expect(res.data).to.deep.equal([])
 
-    await axios.put(`${url}${key}`)
+    res = await axios.put(`${url}${key}`)
     expect(res.status).to.equal(200)
 
     res = await axios.get(url)
     expect(res.status).to.equal(200)
-    expect(res.data).to.deep.equal([key])
+    expect(res.data).to.deep.equal([{ key }])
 
     res = await axios.delete(`${url}${key}`)
     expect(res.status).to.equal(204)

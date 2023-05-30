@@ -14,17 +14,15 @@ console.log('Setting up rehost server')
 const server = await setupRehostServer(rehoster)
 
 const url = `http://localhost:${server.address().port}/`
-const initKeys = (await axios.get(url)).data
-console.log(`Initial keys:\n\t-${initKeys.join('\n\t-')}`)
+console.log('initial keys:')
+await printKeys(url)
 
 console.log('\nAdd a key')
 const publicKey = 'b'.repeat(64)
-await axios.put(`${url}${publicKey}`)
+await axios.put(`${url}${publicKey}`, { info: 'Rehosts my documents' })
 
-const nowKeys = (await axios.get(url)).data
-if (nowKeys.length > 0) {
-  console.log(`Now keys:\n\t-${nowKeys.join('\n\t-')}`)
-}
+console.log('now keys:')
+await printKeys(url)
 
 const { details } = (await axios.get(`${url}info`)).data
 console.log('\n', details) // Includes your own core
@@ -32,13 +30,21 @@ console.log('\n', details) // Includes your own core
 console.log('\nRemove a key')
 await axios.delete(`${url}${publicKey}`)
 
-const finalKeys = (await axios.get(url)).data
-
-console.log(`Final keys:\n\t-${finalKeys.join('\n\t-')}`)
+console.log('Final keys:')
+await printKeys(url)
 
 server.close(
   async () => await Promise.all([rehoster.close(), rehoster.swarmManager.close()])
 )
+
+async function printKeys (url) {
+  const entries = (await axios.get(url)).data
+
+  if (entries.length === 0) console.log('<No entries>')
+  for (const entry of entries) {
+    console.log(`  -${entry.key} (${entry.info || ''})`)
+  }
+}
 
 function getRehoster (store, swarm) {
   swarm.on('connection', (socket) => {
