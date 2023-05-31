@@ -67,7 +67,7 @@ function setupSwarm (logger, corestore, port) {
 
   swarm.on('connection', (socket, peerInfo) => {
     corestore.replicate(socket)
-    socket.on('error', e => console.log(e)) // Usually just unexpectedly closed
+    socket.on('error', e => logger.info(e)) // Usually just unexpectedly closed
 
     const key = asHex(peerInfo.publicKey)
 
