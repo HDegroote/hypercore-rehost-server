@@ -35,17 +35,17 @@
   },
   "dependencies": {
     "corestore": "^6.4.1",
-    "dcent-digraph": "~0.1.1",
+    "dcent-digraph": "^1.0.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "graceful-goodbye": "^1.2.0",
     "hexkey-utils": "^1.0.2",
-    "hypercore-rehoster": "~0.11.2",
+    "hypercore-rehoster": "~0.12.0",
     "hyperdht": "^6.5.3",
     "hyperswarm": "^4.4.1",
     "pino": "^8.8.0",
     "rc": "^1.2.8",
-    "swarm-manager": "0.0.1-alpha.2",
+    "swarm-manager": "^1.0.0",
     "tiny-byte-size": "^1.1.0"
   }
 }
