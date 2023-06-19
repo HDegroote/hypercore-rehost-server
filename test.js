@@ -36,6 +36,10 @@ describe('Rehost server tests', function () {
   this.afterEach(async function () {
     await app.close()
 
+    // Need to clear the metrics, because without clearing
+    // the server crashes on the second test, attempting
+    // to re-register the metrics
+    app.metrics.client.register.clear()
     await swarmManager.close()
     await testnet.destroy()
   })
@@ -77,5 +81,15 @@ describe('Rehost server tests', function () {
     res = await axios.get(`${url}info`)
     expect(res.status).to.equal(200)
     expect(Object.keys(res.data)).to.deep.have.same.members(['info', 'details'])
+  })
+
+  it('Can access metrics', async function () {
+    const res = await axios.get(`${url}metrics`)
+    expect(res.status).to.equal(200)
+  })
+
+  it('Can access health', async function () {
+    const res = await axios.get(`${url}health`)
+    expect(res.status).to.equal(200)
   })
 })
