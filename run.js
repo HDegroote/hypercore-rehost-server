@@ -37,9 +37,9 @@ async function main () {
   }
 
   goodbye(async () => {
-    logger.info('Closing down rehoster and server')
-    server.close(async () => await rehoster.close())
-    logger.info('Closed down successfully--exiting program')
+    logger.info('Closing down server')
+    await server.close()
+    logger.info('Closed server down successfully--exiting program')
   })
 }
 
