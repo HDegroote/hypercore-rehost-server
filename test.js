@@ -10,7 +10,7 @@ import SwarmManager from 'swarm-manager'
 import safetyCatch from 'safety-catch'
 
 describe('Rehost server tests', function () {
-  let server
+  let app
   let testnet, swarm, swarmManager
   let url
   let rehoster
@@ -29,14 +29,13 @@ describe('Rehost server tests', function () {
     })
 
     rehoster = new Rehoster(corestore, swarmManager)
-    server = await setupRehostServer(rehoster)
-    url = `http://localhost:${server.address().port}/`
+    app = await setupRehostServer(rehoster, { logger: false, host: '127.0.0.1' })
+    url = `http://127.0.0.1:${app.server.address().port}/`
   })
 
   this.afterEach(async function () {
-    await new Promise(resolve => server.close(() => resolve()))
+    await app.close()
 
-    await rehoster.close()
     await swarmManager.close()
     await testnet.destroy()
   })
@@ -57,7 +56,7 @@ describe('Rehost server tests', function () {
     expect(res.status).to.equal(200)
     expect(res.data).to.deep.equal([])
 
-    res = await axios.put(`${url}${key}`)
+    res = await axios.put(`${url}${key}`, {})
     expect(res.status).to.equal(200)
 
     res = await axios.get(url)
