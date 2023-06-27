@@ -11,9 +11,11 @@ const corestore = new Corestore(corestoreLoc)
 const rehoster = getRehoster(corestore, new Hyperswarm())
 
 console.log('Setting up rehost server')
-const server = await setupRehostServer(rehoster)
+const host = '127.0.0.1'
+const app = await setupRehostServer(rehoster, { logger: false, host })
+const server = app.server
+const url = `http://${host}:${server.address().port}/`
 
-const url = `http://localhost:${server.address().port}/`
 console.log('initial keys:')
 await printKeys(url)
 

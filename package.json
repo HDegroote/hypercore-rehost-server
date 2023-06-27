@@ -8,7 +8,8 @@
   "description": "Minimal server on top of hypercore-rehoster",
   "main": "index.js",
   "scripts": {
-    "test": "standard && nyc --reporter=text mocha"
+    "test": "standard && nyc --reporter=text mocha",
+    "example": "node example.js"
   },
   "author": "H. Degroote",
   "license": "MIT",
