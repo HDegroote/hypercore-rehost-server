@@ -12,7 +12,7 @@
     "example": "node example.js"
   },
   "author": "H. Degroote",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@hyperswarm/testnet": "^3.1.0",
     "axios": "^1.2.1",
