@@ -44,7 +44,7 @@ Details contains basic info for all hosted keys (including recursively hosted on
 
 ## Config
 
-Config variables include:
+Config variables are specified either in a .env file or as environment variables. They include:
 - CORESTORE_LOC = './rehoster-corestore'
    - The location of the corestore where all cores will be stored
 - BEE_NAME = 'rehoster-bee'
@@ -54,18 +54,3 @@ Config variables include:
   - Address where the server runs
 - PORT
   - Port where the server runs
-
-RC is used to define the config, with application name `REHOST_SERVER`. See [here](https://www.npmjs.com/package/rc) for all config options.
-
-The simplest ones are to either:
-
-#### Pass them on the command line
-`rehost-server --PORT 40000 --CORESTORE_LOC './my-loc'`
-
-#### Or to define a .REHOST_SERVERrc file
-```
-CORESTORE_LOC = 'other-corestore',
-BEE_NAME = 'other-bee',
-LOG_LEVEL = 'debug'
-PORT = 45045
-```
