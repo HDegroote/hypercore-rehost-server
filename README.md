@@ -50,10 +50,10 @@ Config variables include:
 - BEE_NAME = 'rehoster-bee'
    - The name of the hyperbee containing the public keys of all hypercores to be rehosted
 - LOG_LEVEL = 'info'
-- HOST
-  - Address where the server runs (uses express's default if not defined)
+- HOST = '127.0.0.1'
+  - Address where the server runs
 - PORT
-  - Port where the server runs (uses express's default if not defined)
+  - Port where the server runs
 
 RC is used to define the config, with application name `REHOST_SERVER`. See [here](https://www.npmjs.com/package/rc) for all config options.
 
