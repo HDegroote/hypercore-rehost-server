@@ -12,7 +12,7 @@ RUN npm i -g hypercore-rehost-server@${TAG}
 
 RUN useradd --create-home rehoster
 USER rehoster
-# Ensure correct permissions on corestore dir by alraedy creating it
+# Ensure correct permissions on corestore dir by already creating it
 # (relevant when using volumes)
 RUN mkdir $CORESTORE_LOC
 
