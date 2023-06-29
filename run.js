@@ -63,7 +63,7 @@ async function initRehoster (config, logger) {
 
 function setupSwarm (logger, corestore, port) {
   const dht = new DHT({ port })
-  const swarm = new Hyperswarm(dht)
+  const swarm = new Hyperswarm({ dht })
 
   swarm.on('connection', (socket, peerInfo) => {
     corestore.replicate(socket)
