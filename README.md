@@ -11,6 +11,7 @@ Note: if not running on a personal computer, you will almost certainly want to f
 `npm -g i hypercore-rehost-server`
 
 ## Usage
+Note: can be run as Docker, see [here](https://hub.docker.com/r/hdegroote/rehoster/).
 
 `rehost-server`
 
