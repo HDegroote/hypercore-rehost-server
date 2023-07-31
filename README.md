@@ -13,6 +13,8 @@ Note: if not running on a personal computer, you will almost certainly want to f
 ## Usage
 Note: can be run as Docker, see [here](https://hub.docker.com/r/hdegroote/rehoster/).
 
+CLI usage:
+
 `rehost-server`
 
 By default, the logs are in JSON format.
