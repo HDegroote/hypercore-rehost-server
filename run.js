@@ -19,6 +19,12 @@ async function main () {
     { name: 'rehost-server', level: config.LOG_LEVEL }
   )
 
+  const configEntries = []
+  for (const [key, value] of Object.entries(config)) {
+    configEntries.push(`${key}: ${value}`)
+  }
+  logger.info(`Using config:\n -${configEntries.join('\n- ')}`)
+
   const rehoster = await initRehoster(config, logger)
 
   const server = await setupRehostServer(rehoster, {
