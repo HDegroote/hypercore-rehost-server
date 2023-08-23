@@ -39,7 +39,7 @@ describe('Rehost server tests', function () {
     // Need to clear the metrics, because without clearing
     // the server crashes on the second test, attempting
     // to re-register the metrics
-    app.metrics.client.register.clear()
+    app._promClientRegister.clear()
     await swarmManager.close()
     await testnet.destroy()
   })
