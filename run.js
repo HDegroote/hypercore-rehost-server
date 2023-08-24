@@ -30,6 +30,7 @@ async function main () {
   const server = await setupRehostServer(rehoster, {
     host: config.HOST,
     port: config.PORT,
+    exposeSwarm: config.EXPOSE_SWARM,
     logger
   })
 
