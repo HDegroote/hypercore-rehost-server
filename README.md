@@ -4,8 +4,6 @@ Simple server to keep hypercores available.
 
 A CLI to interact with this server is provided at [hypercore-rehost-cli](https://gitlab.com/HDegroote/hypercore-rehost-cli).
 
-Note: if not running on a personal computer, you will almost certainly want to firewall the port this server is running on, as it is an http server without any authentication.
-
 ## Install
 
 `npm -g i hypercore-rehost-server`
