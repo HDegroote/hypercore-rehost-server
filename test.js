@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import ram from 'random-access-memory'
 import axios from 'axios'
-import createTestnet from '@hyperswarm/testnet'
+import createTestnet from 'hyperdht/testnet.js'
 import Hyperswarm from 'hyperswarm'
 import Corestore from 'corestore'
 import Rehoster from 'hypercore-rehoster'
