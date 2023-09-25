@@ -1,6 +1,6 @@
 {
   "name": "hypercore-rehost-server",
-  "version": "0.13.12",
+  "version": "1.0.0",
   "type": "module",
   "bin": {
     "rehost-server": "./run.js"
