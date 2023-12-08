@@ -7,3 +7,5 @@ package-lock.json
 coverage/
 .env
 
+rehoster-corestore/
+keys.json
