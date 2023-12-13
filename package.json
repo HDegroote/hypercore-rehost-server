@@ -45,7 +45,7 @@
     "hypercore-id-encoding": "^1.2.0",
     "hypercore-rehoster": "^1.2.0",
     "hyperdht": "^6.6.2",
-    "hypermetrics": "^1.2.0",
+    "hypermetrics": "^1.2.1",
     "hyperswarm": "^4.4.1",
     "instrumented-swarm": "^1.0.0",
     "pino": "^8.8.0",
