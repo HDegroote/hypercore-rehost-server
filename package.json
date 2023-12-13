@@ -19,6 +19,7 @@
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
     "random-access-memory": "^5.0.1",
+    "safety-catch": "^1.0.2",
     "standard": "^17.0.0"
   },
   "standard": {
@@ -43,6 +44,7 @@
     "hypercore-rehoster": "^1.2.0",
     "hyperdht": "^6.6.2",
     "hyperswarm": "^4.4.1",
+    "@hdegroote/instrumented-corestore": "^0.0.1-alpha.1",
     "instrumented-swarm": "^1.0.0",
     "pino": "^8.8.0",
     "prom-client": "^14.2.0",

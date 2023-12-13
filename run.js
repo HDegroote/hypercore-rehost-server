@@ -32,7 +32,8 @@ async function main () {
     port: config.PORT,
     exposeSwarm: config.EXPOSE_SWARM,
     logger,
-    configPath: config.REHOSTER_KEYS_PATH
+    configPath: config.REHOSTER_KEYS_PATH,
+    detailedMetrics: config.DETAILED_METRICS
   })
 
   const minutesLogInterval = config.MIN_LOG_SUMMARY_INTERVAL
