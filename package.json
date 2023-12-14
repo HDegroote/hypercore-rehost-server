@@ -41,7 +41,7 @@
     "fastify": "^4.18.0",
     "graceful-goodbye": "^1.2.0",
     "hexkey-utils": "^1.0.2",
-    "hypercore-rehoster": "^1.2.0",
+    "hypercore-rehoster": "^1.2.1",
     "hyperdht": "^6.6.2",
     "hyperswarm": "^4.4.1",
     "@hdegroote/instrumented-corestore": "^0.0.1-alpha.1",
