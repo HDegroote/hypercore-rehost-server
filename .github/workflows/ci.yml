@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - 'main'
+      - 'debug'
     tags:
       - '*'
   pull_request:
@@ -24,14 +24,9 @@ jobs:
       - run: npm run example
 
   docker: # Should run after the npm package was published
-    if: startsWith(github.ref, 'refs/tags/')
+    # if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      -
-        name: 'Extract tag name'
-        shell: bash
-        run: echo "tag=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
-        id: extract_tag
       - # Needed for buildX, which accessed cwd
         name: Checkout
         uses: actions/checkout@v3
@@ -54,5 +49,4 @@ jobs:
           context: . # TODO: verify if needed (uses context of cwd instead of that of a fresh git checkout)
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rehoster:${{ steps.extract_tag.outputs.tag }}, ${{ secrets.DOCKERHUB_USERNAME }}/rehoster:latest
-          build-args: TAG=${{ steps.extract_tag.outputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rehoster:debug

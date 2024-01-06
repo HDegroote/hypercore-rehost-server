@@ -1,5 +1,6 @@
 #! /usr/bin/env node
-
+import { fileURLToPath } from 'url';
+import path from 'path'
 import loadConfig from './lib/config.js'
 import setupLogger from 'pino'
 import goodbye from 'graceful-goodbye'
@@ -9,9 +10,19 @@ import Hyperswarm from 'hyperswarm'
 import { asHex } from 'hexkey-utils'
 import DHT from 'hyperdht'
 import SwarmManager from 'swarm-manager'
+import heapdump from 'heapdump' // eslint-disable-line no-unused-vars
 
 import { logRehostingInfo } from './lib/utils.js'
 import setupRehostServer from './lib/server.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+let snapCounter = 0
+process.on('SIGUSR2', async () => {
+  const dest = path.join(__dirname, `snapshots/${snapCounter++}-${Date.now()}-rehoster.heapsnapshot`)
+  console.log('writing heap snapshot to', dest)
+  heapdump.writeSnapshot(dest, (e) => console.log(e))
+})
 
 async function main () {
   const config = loadConfig()
