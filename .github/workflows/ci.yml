@@ -30,6 +30,7 @@ jobs:
       - # Needed for buildX, which accessed cwd
         name: Checkout
         uses: actions/checkout@v3
+      - run: npm install
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0 https://github.com/docker/setup-qemu-action/releases/tag/v3.0.0
