@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:18
 ARG TAG=passAsBuildArg
 
 ENV SWARM_PORT=48200
@@ -10,7 +10,7 @@ ENV CORESTORE_LOC=/home/rehoster/store
 
 RUN useradd --create-home rehoster
 
-USER rehoster
+# USER rehoster
 # Ensure correct permissions on corestore dir by already creating it
 # (relevant when using volumes)
 RUN mkdir $CORESTORE_LOC
@@ -22,5 +22,9 @@ COPY lib /home/rehoster/lib
 COPY package.json /home/rehoster/package.json
 COPY run.js /home/rehoster/run.js
 COPY index.js /home/rehoster/index.js
+RUN npm i -g node-gyp
+WORKDIR /home/rehoster/node_modules/heapdump
+RUN node-gyp configure build
+
 
 ENTRYPOINT ["node", "/home/rehoster/run.js"]
