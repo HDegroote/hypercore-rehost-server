@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url'
 import path from 'path'
 import loadConfig from './lib/config.js'
 import setupLogger from 'pino'
@@ -15,7 +15,7 @@ import heapdump from 'heapdump' // eslint-disable-line no-unused-vars
 import { logRehostingInfo } from './lib/utils.js'
 import setupRehostServer from './lib/server.js'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 let snapCounter = 0
 process.on('SIGUSR2', async () => {
