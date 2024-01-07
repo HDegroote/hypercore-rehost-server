@@ -38,6 +38,7 @@
     "@hdegroote/instrumented-corestore": "^0.0.1-alpha.1",
     "corestore": "^6.13.0",
     "dcent-digraph": "^1.0.0",
+    "dht-rpc": "holepunchto/dht-rpc#fix-hosts-memleak",
     "dotenv": "^16.0.3",
     "fastify": "^4.18.0",
     "graceful-goodbye": "^1.2.0",
