@@ -55,5 +55,5 @@ jobs:
           context: . # TODO: verify if needed (uses context of cwd instead of that of a fresh git checkout)
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rehoster:${{ steps.extract_tag.outputs.tag }}, ${{ secrets.DOCKERHUB_USERNAME }}/rehoster:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hypercore-rehost-server:${{ steps.extract_tag.outputs.tag }}, ${{ secrets.DOCKERHUB_USERNAME }}/hypercore-rehost-server:latest
           build-args: TAG=${{ steps.extract_tag.outputs.tag }}
